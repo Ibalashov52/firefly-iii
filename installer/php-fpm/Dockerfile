@@ -1,4 +1,4 @@
-FROM php:8.1.0-fpm
+FROM php:8.2.0-fpm
 
 WORKDIR "/application"
 
@@ -8,6 +8,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
+        locales  \
+        locales-all \
         libicu-dev \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
@@ -21,7 +23,6 @@ RUN apt-get update \
         git \
         net-tools iputils-ping iproute2 dnsutils\
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
-
 
 RUN docker-php-ext-install bcmath zip pdo_pgsql exif
 
@@ -49,4 +50,5 @@ RUN mkdir -p /var/www/.config/psysh
 RUN chown 33:33 /var/www/.config/psysh
 RUN chown 33:33 /application/bootstrap/cache
 
+RUN locale-gen
 USER dev

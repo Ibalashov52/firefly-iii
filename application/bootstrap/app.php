@@ -64,8 +64,14 @@ if (!function_exists('stringIsEqual')) {
 }
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__ . '/firefly-iii/')
+    // Сбрасываем путь для контейнера. Что бы работало всё.
+    // TODO: Переделать инфраструктуру под вариант по умолчанию
+    realpath(__DIR__ . '/..')
 );
+
+//$app = new Illuminate\Foundation\Application(
+//    realpath(__DIR__ . '/application')
+//);
 
 /*
 |--------------------------------------------------------------------------
