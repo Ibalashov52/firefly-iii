@@ -1,0 +1,38 @@
+version: "2.4"
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+    ports:
+      - "${POSTGRESQL_PORT}:5432"
+    volumes:
+      - 'postgresql_data:/var/lib/postgresql/data'
+
+  app:
+    build:
+      context: ../
+      dockerfile: ./installer/php-fpm/Dockerfile
+    image: backend_app
+    depends_on:
+      - postgres
+    volumes:
+      - ../application:/application
+
+  webserver:
+    image: nginx:1.17.9-alpine
+    working_dir: /application
+    volumes:
+      - ../application:/application
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+      - postgres
+    ports:
+      - "${NGINX_PORT}:80"
+
+volumes:
+  postgresql_data:
